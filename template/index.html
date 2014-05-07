@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}瞎扯·如何正确的吐槽 - 来自知乎日报{% end %}
+{% block content %}
+	<div class="header">          
+		<a class="pull-right rss" href="/rss">RSS</a>
+        <h3 class="logo"><a href="/" class="text-muted">瞎扯 · 如何正确的吐槽</a></h3>
+      </div>
+	<ul class="news-list clearfix">
+		{% for item in data['news'] %}
+			<li>
+				<a href="/news/{{item['news_id']}}">
+				<img src="{{ item['thumbnail'] }}" height="120" width="120">
+				<div class="news-summary">
+				<span class="news-date">{{ item['display_date'] }}</span><span class="news-title">{{ item['title'] }}</span>
+				</div>
+				</a>
+			</li>
+		{% end %}
+			{% if 'timestamp' in data %}
+			<li>
+				<a href="/before/{{ data['timestamp']}}">before</a>
+			</li>
+			{% end %}
+	</ul>
+{% end %}
+{% block style %}
+.logo{
+	margin:0;
+	padding:30px 0 0;
+}
+.rss{
+	margin-top:7px;
+}
+.header .rss{
+	padding-top:30px;
+}
+.news-list{
+	padding:30px 0;
+}
+.news-list li{
+	float:left;
+	width:120px;
+	height:120px;
+	position: relative;
+	list-style: none;
+}
+.news-summary span{
+	display: block;
+	text-align:center;
+	color:#fff;
+}
+.news-list li .news-summary{
+	position:absolute;
+	height:120px;
+	width:120px;
+	padding-top:30px;
+	top:0;
+	left:0;
+	background:rgba(0,0,0,.5); 
+	display: none;
+}
+.news-list li:hover .news-summary{
+	display: block;
+}
+{% end %}

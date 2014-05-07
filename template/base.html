@@ -1,0 +1,24 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="UTF8" />
+		<title>{% block title %} Index {% end %}</title>
+		<link href="http://cdn.staticfile.org/twitter-bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+		<link href="http://cdn.staticfile.org/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
+		<style type="text/css">
+		.container{width:630px;}
+		{% block style %}{% end %}			
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			{% block content %}{% end %}
+		</div>
+		<div class="footer">
+			<div class="container">
+				&copy; 知乎 zhihu.com, 本站内容均来自知乎日报以及知乎, 如本站有非法转载内容请<a href="mailto:housne@gmail.com">联系我</a>
+			</div>
+		</div>
+		{% block script %}{% end %}
+	</body>
+</html>
