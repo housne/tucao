@@ -7,9 +7,11 @@ import json
 import tornado.autoreload
 import os
 import re
+from db import News
 
 dirname = os.path.dirname(__file__)
 TEMPATE_PATH = os.path.join(dirname, 'template')
+IMAGE_PATH = os.path.join(dirname, 'images')
 
 settings = {
 	'template_path': TEMPATE_PATH,
@@ -20,6 +22,7 @@ section = 2
 sectionUrl = 'http://news-at.zhihu.com/api/2/section/' + str(section)
 newsUrl = 'http://news-at.zhihu.com/api/2/news/'
 beforeUlr = sectionUrl + '/before/'
+cache = {}
 
 def requestData(url, type=None):
 	request = urllib2.Request(url)
@@ -34,6 +37,23 @@ def requestData(url, type=None):
 	data = json.load(response)
 	return data
 
+class Cache(object):
+
+	def __init__(self):
+		pass
+
+	def get(self, key):
+		try:
+			data = cache[key]
+		except KeyError:
+			data = None
+		return data
+
+	def save(self, key, obj, expire):
+		obj['expire'] = expire
+		cache[key] = obj
+		print(cache)
+		
 def notFound(RequestHandler):
 	RequestHandler.clear()
 	RequestHandler.set_status(404)
@@ -43,31 +63,55 @@ def imgReplace(str):
 	body = re.sub(r'http\://[\w-]+\.zhimg\.com', '/images', str)
 	return body
 
+def getNews(news_id):
+	news = News(news_id)
+	data = news.get()
+	return data
+
 class IndexHandler(tornado.web.RequestHandler):
 	def get(self):
-		data = requestData(sectionUrl)
-		for i, v in enumerate(data['news']):
-			data['news'][i]['thumbnail'] = imgReplace(v['thumbnail'])
+		indexCache = Cache()
+		data = indexCache.get('index')
+		if data is None:
+			data = requestData(sectionUrl)
+			for i, v in enumerate(data['news']):
+				data['news'][i]['thumbnail'] = imgReplace(v['thumbnail'])
+			indexCache.save('index', data, 1)
 		self.render('index.html', data = data)
 
 class NewsHandler(tornado.web.RequestHandler):
 	def get(self, news_id):
-		data = requestData(newsUrl + str(news_id))
+		data = getNews(news_id)
 		if data is None:
-			notFound(self)
-		data['body'] = imgReplace(data['body'])
-		try:
-			data['image'] = imgReplace(data['image'])
-		except KeyError:
-			data['image'] = '/images/default-lg.jpg'
+			data = requestData(newsUrl + str(news_id))
+			if data is None:
+				notFound(self)
+			data['body'] = imgReplace(data['body'])
+			try:
+				data['image'] = imgReplace(data['image'])
+			except KeyError:
+				data['image'] = 'default-lg.jpg'
+			news = News(int(data['id']))
+			news.save(data)
 		self.render('news.html', data = data)
 
 class ImageHandler(tornado.web.RequestHandler):
 	def get(self, level, block, name, type):
-		url = 'http://www.zhimg.com/%s/%s/%s.%s' %(level, block, name, type)
-		data = requestData(url, type='raw')
-		if data is None:
-			notFound(self)
+		directory = IMAGE_PATH + '/%s/%s/' %(level, block)
+		imageName = '%s.%s' %(name, type)
+		try:
+			data = open(directory + imageName, 'rb')
+			data = data.read()
+		except IOError:
+			url = 'http://www.zhimg.com/%s/%s/%s.%s' %(level, block, name, type)
+			data = requestData(url, type='raw')
+			if not os.path.exists(directory):
+				os.makedirs(directory)
+			saveImage = open(directory + imageName, 'w+')
+			saveImage.write(data)
+			saveImage.close()
+			if data is None:
+				notFound(self)
 		self.set_header('Content-Type', 'image/'+ type)
 		self.write(data)
 
@@ -97,7 +141,7 @@ application = tornado.web.Application([
 		(r'/', IndexHandler),
 		(r'/news/([0-9]+)', NewsHandler),
 		(r'/images/([^/]+)/([^/]+)/([a-z0-9_\-]+).([^/]+)', ImageHandler),
-		(r'/before/([0-9]+)', BeforeHandler),
+		#(r'/before/([0-9]+)', BeforeHandler),
 		(r'/rss', RssHandler)
 	], **settings)
 

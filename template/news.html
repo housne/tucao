@@ -7,6 +7,7 @@
 				<a href="/rss" class="pull-right"><i class="fa fa-rss"></i></a>
 				<a href="/"><i class="fa fa-home"></i></a>
 			</div>
+			<div class="image-copyright">图片 {{ data['image_source'] }}</div>
 		</div>
 		<div class="news-content">
 			{{ data['body'] }}
@@ -31,10 +32,18 @@ body{
 	background:rgba(0,0,0,.5);
 	padding: 10px 20px;
 	font-size:28px;
+	z-index:3;
 }
 .top-nav a{
 	color:#fff;
 	opacity:.6;
+}
+.image-copyright{
+	position:absolute;
+	color:#fff;
+	right:20px;
+	bottom:20px;
+	text-shadow:1px 1px 1px rgba(0,0,0,.5);
 }
 .top-nav a:hover{
 	opacity:1;
