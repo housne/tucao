@@ -7,6 +7,7 @@ import json
 import tornado.autoreload
 import os
 import re
+import time
 from db import News
 
 dirname = os.path.dirname(__file__)
@@ -39,21 +40,29 @@ def requestData(url, type=None):
 
 class Cache(object):
 
-	def __init__(self):
-		pass
+	def __init__(self, key=None):
+		self.key = key
 
-	def get(self, key):
+	def get(self):
 		try:
-			data = cache[key]
+			data = cache[self.key]
+			now = time.time()
+			if 'expire' not in cache[self.key]:
+				cache.pop(self.key, None)
+				return 'expired'
+			expire = cache[self.key]['expire']
+			if now >= expire:
+				return 'expired'
 		except KeyError:
-			data = None
-		return data
+			return None
+		return data['data']
 
-	def save(self, key, obj, expire):
-		obj['expire'] = expire
-		cache[key] = obj
-		print(cache)
+	def save(self, data, expire):
+		cache[self.key] = {}
+		cache[self.key]['data'] = data
+		cache[self.key]['expire'] = time.time() + expire
 		
+
 def notFound(RequestHandler):
 	RequestHandler.clear()
 	RequestHandler.set_status(404)
@@ -70,13 +79,13 @@ def getNews(news_id):
 
 class IndexHandler(tornado.web.RequestHandler):
 	def get(self):
-		indexCache = Cache()
-		data = indexCache.get('index')
-		if data is None:
+		indexCache = Cache(key='index')
+		data = indexCache.get()
+		if data is None or data == 'expired':
 			data = requestData(sectionUrl)
 			for i, v in enumerate(data['news']):
 				data['news'][i]['thumbnail'] = imgReplace(v['thumbnail'])
-			indexCache.save('index', data, 1)
+			indexCache.save(data, 60*60*2)
 		self.render('index.html', data = data)
 
 class NewsHandler(tornado.web.RequestHandler):
@@ -117,23 +126,31 @@ class ImageHandler(tornado.web.RequestHandler):
 
 class BeforeHandler(tornado.web.RequestHandler):
 	def get(self, date):
-		data = requestData(beforeUlr + date)
-		for i, v in enumerate(data['news']):
-			data['news'][i]['thumbnail'] = imgReplace(v['thumbnail'])
+		beforeCache = Cache(key='before' + str(date))
+		data = beforeCache.get()
+		if data is None or data == 'expired':
+			data = requestData(beforeUlr + date)
+			for i, v in enumerate(data['news']):
+				data['news'][i]['thumbnail'] = imgReplace(v['thumbnail'])
+			beforeCache.save(data, 60*60*24)
 		self.render('index.html', data = data)
 
 class RssHandler(tornado.web.RequestHandler):
 	def get(self):
-		latestList = requestData(sectionUrl)
-		newsList = []
-		for i in range(10):
-			newsList.append(latestList['news'][i])
-		RssnNewsList = []
-		for i, news in enumerate(newsList):
-			data = requestData(newsUrl + str(news['news_id']))
-			data['date'] = newsList[i]['date']
-			data['body'] = imgReplace(data['body'])
-			RssnNewsList.append(data)
+		rssCache = Cache(key='rss')
+		RssnNewsList = rssCache.get()
+		if RssnNewsList is None or RssnNewsList == 'expired':
+			latestList = requestData(sectionUrl)
+			newsList = []
+			for i in range(10):
+				newsList.append(latestList['news'][i])
+			RssnNewsList = []
+			for i, news in enumerate(newsList):
+				data = requestData(newsUrl + str(news['news_id']))
+				data['date'] = newsList[i]['date']
+				data['body'] = imgReplace(data['body'])
+				RssnNewsList.append(data)
+			rssCache.save(RssnNewsList, 60*60*24)
 		self.set_header('Content-Type', 'application/xml')
 		self.render('rss.xml', data = RssnNewsList)
 
