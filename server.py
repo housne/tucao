@@ -81,7 +81,7 @@ def getNews(news_id):
 
 def formatDatetime(date):
 	date = str(date)
-	date = datetime.datetime.strptime(date, '%Y%m%d')
+	date = datetime.datetime.strptime(date, '%Y%m%d').isoformat()
 	date = str(date) + '+08:00'
 	return date
 
