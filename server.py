@@ -21,8 +21,6 @@ settings = {
 	'debug': True
 }
 
-CNTIMEZONE = timezone('Asia/Shanghai')
-
 section = 2
 sectionUrl = 'http://news-at.zhihu.com/api/2/section/' + str(section)
 newsUrl = 'http://news-at.zhihu.com/api/2/news/'
