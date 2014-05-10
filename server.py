@@ -8,6 +8,9 @@ import tornado.autoreload
 import os
 import re
 import time
+import datetime
+from email.Utils import formatdate
+from pytz import timezone
 from db import News
 
 dirname = os.path.dirname(__file__)
@@ -18,6 +21,8 @@ settings = {
 	'template_path': TEMPATE_PATH,
 	'debug': True
 }
+
+CNTIMEZONE = timezone('Asia/Shanghai')
 
 section = 2
 sectionUrl = 'http://news-at.zhihu.com/api/2/section/' + str(section)
@@ -77,6 +82,12 @@ def getNews(news_id):
 	data = news.get()
 	return data
 
+def formatDatetime(date):
+	date = str(date)
+	date = datetime.datetime.strptime(date, '%Y%m%d')
+	date = str(date) + '+08:00'
+	return date
+
 class IndexHandler(tornado.web.RequestHandler):
 	def get(self):
 		indexCache = Cache(key='index')
@@ -85,7 +96,7 @@ class IndexHandler(tornado.web.RequestHandler):
 			data = requestData(sectionUrl)
 			for i, v in enumerate(data['news']):
 				data['news'][i]['thumbnail'] = imgReplace(v['thumbnail'])
-			indexCache.save(data, 60*60*2)
+			indexCache.save(data, 60*60*12)
 		self.render('index.html', data = data)
 
 class NewsHandler(tornado.web.RequestHandler):
@@ -148,6 +159,7 @@ class RssHandler(tornado.web.RequestHandler):
 			for i, news in enumerate(newsList):
 				data = requestData(newsUrl + str(news['news_id']))
 				data['date'] = newsList[i]['date']
+				data['date'] = formatDatetime(data['date'])
 				data['body'] = imgReplace(data['body'])
 				RssnNewsList.append(data)
 			rssCache.save(RssnNewsList, 60*60*24)
