@@ -10,7 +10,6 @@ import re
 import time
 import datetime
 from email.Utils import formatdate
-from pytz import timezone
 from db import News
 
 dirname = os.path.dirname(__file__)
