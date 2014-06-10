@@ -193,7 +193,7 @@ class sender(tornado.web.RequestHandler):
 			self.write(data);
 		else:
 			self.add_header('Content-Type', 'application/javascript')
-			self.write(callback +'({message: '+ data['message'] +'})')
+			self.write(callback +'('+ data +')')
 
 application = tornado.web.Application([
 		(r'/', IndexHandler),
