@@ -187,13 +187,13 @@ class sender(tornado.web.RequestHandler):
 			data = {'message': 'name, email and content are required'}
 		else:
 			resp = requests.post(url, data=params)
-			data = json.loads(resp.content)
+			data = resp.content
 		if callback is None:
 			self.add_header('Content-Type', 'application/json')
 			self.write(data);
 		else:
 			self.add_header('Content-Type', 'application/javascript')
-			self.write(callback +'('+ str(data) +')')
+			self.write(callback +'({message: '+ data['message'] +'})')
 
 application = tornado.web.Application([
 		(r'/', IndexHandler),
