@@ -11,6 +11,8 @@ import time
 import datetime
 from email.Utils import formatdate
 from db import News
+import requests
+import json
 
 dirname = os.path.dirname(__file__)
 TEMPATE_PATH = os.path.join(dirname, 'template')
@@ -53,6 +55,8 @@ class Cache(object):
 				cache.pop(self.key, None)
 				return 'expired'
 			expire = cache[self.key]['expire']
+			print((expire - now)/(60*60))
+			print(expire)
 			if now >= expire:
 				return 'expired'
 		except KeyError:
@@ -163,15 +167,44 @@ class RssHandler(tornado.web.RequestHandler):
 		self.set_header('Content-Type', 'application/xml')
 		self.render('rss.xml', data = RssnNewsList)
 
+class sender(tornado.web.RequestHandler):
+	def get(self):
+		name = self.get_argument('name', default=None)
+		email = self.get_argument('email', default=None)
+		subject = self.get_argument('subject', default=None)
+		text = self.get_argument('content', default=None)
+		callback = self.get_argument('callback', default=None)
+		url = 'https://sendcloud.sohu.com/webapi/mail.send.json'
+		params = {
+			'api_user': 'postmaster@housne.sendcloud.org',
+			'api_key': 'M1EljOT9',
+			'to': 'housne@gmail.com',
+			'from': email,
+			'subject': subject,
+			'html': text
+		}
+		if name is None or email is None or text is None:
+			data = {'message': 'name, email and content are required'}
+		else:
+			resp = requests.post(url, data=params)
+			data = json.loads(resp.content)
+		if callback is None:
+			self.add_header('Content-Type', 'application/json')
+			self.write(data);
+		else:
+			self.add_header('Content-Type', 'application/javascript')
+			self.write(callback +'('+ str(data) +')')
+
 application = tornado.web.Application([
 		(r'/', IndexHandler),
 		(r'/news/([0-9]+)', NewsHandler),
 		(r'/images/([^/]+)/([^/]+)/([a-z0-9_\-]+).([^/]+)', ImageHandler),
 		#(r'/before/([0-9]+)', BeforeHandler),
-		(r'/rss', RssHandler)
+		(r'/rss', RssHandler),
+		(r'/message/send', sender)
 	], **settings)
 
 
 if __name__ == '__main__':
-	application.listen(8090)
+	application.listen(7090)
 	tornado.ioloop.IOLoop.instance().start()
