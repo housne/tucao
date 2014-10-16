@@ -20,7 +20,7 @@ IMAGE_PATH = os.path.join(dirname, 'images')
 
 settings = {
 	'template_path': TEMPATE_PATH,
-	'debug': True
+	'debug': False
 }
 
 section = 2
@@ -75,7 +75,8 @@ def notFound(RequestHandler):
 	RequestHandler.finish("404")
 
 def imgReplace(str):
-	body = re.sub(r'http\://[\w-]+\.zhimg\.com', '/images', str)
+	print(str)
+	body = re.sub(r'http\:\/\/([\w\d\-_]+)\.zhimg\.com', '/images/\\1', str)
 	return body
 
 def getNews(news_id):
@@ -125,6 +126,26 @@ class ImageHandler(tornado.web.RequestHandler):
 			data = data.read()
 		except IOError:
 			url = 'http://www.zhimg.com/%s/%s/%s.%s' %(level, block, name, type)
+			data = requestData(url, type='raw')
+			if not os.path.exists(directory):
+				os.makedirs(directory)
+			saveImage = open(directory + imageName, 'w+')
+			saveImage.write(data)
+			saveImage.close()
+			if data is None:
+				notFound(self)
+		self.set_header('Content-Type', 'image/'+ type)
+		self.write(data)
+
+class NewImageHandler(tornado.web.RequestHandler):
+	def get(self, host, name, type):
+		directory = IMAGE_PATH + '/%s/' %host
+		imageName = '%s.%s' %(name, type)
+		try:
+			data = open(directory + imageName, 'rb')
+			data = data.read()
+		except IOError:
+			url = 'http://%s.zhimg.com/%s.%s' %(host, name, type)
 			data = requestData(url, type='raw')
 			if not os.path.exists(directory):
 				os.makedirs(directory)
@@ -198,7 +219,7 @@ class sender(tornado.web.RequestHandler):
 application = tornado.web.Application([
 		(r'/', IndexHandler),
 		(r'/news/([0-9]+)', NewsHandler),
-		(r'/images/([^/]+)/([^/]+)/([a-z0-9_\-]+).([^/]+)', ImageHandler),
+		(r'/images/([a-z0-9\-_]+)/([a-z0-9\-_]+).(\w+)', NewImageHandler),
 		#(r'/before/([0-9]+)', BeforeHandler),
 		(r'/rss', RssHandler),
 		(r'/message/send', sender)
@@ -206,5 +227,5 @@ application = tornado.web.Application([
 
 
 if __name__ == '__main__':
-	application.listen(8090)
+	application.listen(9000)
 	tornado.ioloop.IOLoop.instance().start()
