@@ -55,8 +55,6 @@ class Cache(object):
 				cache.pop(self.key, None)
 				return 'expired'
 			expire = cache[self.key]['expire']
-			print((expire - now)/(60*60))
-			print(expire)
 			if now >= expire:
 				return 'expired'
 		except KeyError:
@@ -75,7 +73,6 @@ def notFound(RequestHandler):
 	RequestHandler.finish("404")
 
 def imgReplace(str):
-	print(str)
 	body = re.sub(r'http\:\/\/([\w\d\-_]+)\.zhimg\.com', '/images/\\1', str)
 	return body
 

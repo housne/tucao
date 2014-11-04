@@ -20,15 +20,14 @@ body{
 .container{
 	background:#fff;
 	overflow:hidden;
-	width:600px;
+	max-width:600px;
 	padding:0;
 }
 .top-nav{
 	position:fixed;
 	top:0;
-	width:600px;
-	left:50%;
-	margin-left:-300px;
+	width:100%;
+	max-width:600px;
 	background:rgba(0,0,0,.5);
 	padding: 10px 20px;
 	font-size:28px;
@@ -74,10 +73,13 @@ body{
 	font-size:16px;
 }
 .meta .avatar{
-	border-radius:17px;
+	border-radius:100%;
 }
 .footer .container{
-	text-align:center;
-	padding: 20px 0;
+	padding: 20px;
+}
+.question .content img{
+	max-width:100%;
+	margin:10px 0;
 }
 {% end %}
