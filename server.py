@@ -1,6 +1,6 @@
 #-*- coding:utf-8 -*-
 
-from flask import Flask, jsonify, render_template, make_response
+from flask import Flask, jsonify, render_template, make_response, request
 import os
 from news import News
 from conf import *
@@ -11,12 +11,14 @@ import datetime
 
 app = Flask(__name__, static_url_path='/assets')
 
-def jsonResponse(data=None, type=None):
+def jsonResponse(data=None, type=None, extra_data=[]):
     response = {}
     status = 200
     if type == None:
         response['code'] = 0
         response['result'] = data
+        if(extra_data):
+            [response.update(data) for data in extra_data]
     elif type == '404':
         status = 404
         response = {"code": 404, "message": "Not Found"}
@@ -31,13 +33,16 @@ def jsonResponse(data=None, type=None):
 @app.route('/api/news')
 def index():
     news = News()
-    data = news.list()
+    page = request.args.get('page')
+    if page is None:
+        page = 1
+    data = news.list(page=int(page))
+    total = news.count()
     if data is None:
         return jsonResponse(type='404')
     for i, item in enumerate(data):
         data[i]['date'] = time.mktime(item['date'].timetuple())
-        print(data[i]['date'])
-    return jsonResponse(data=data)
+    return jsonResponse(data=data, extra_data=[{'total': total}])
 
 @app.route('/api/news/<int:id>')
 def news(id):

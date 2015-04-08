@@ -52,6 +52,14 @@ class News(Base):
 		newses = session.query(News).limit(10)
 		return [row2dict(news) for news in newses]
 
+	def count(self, limit=20):
+		count = session.query(News).count()
+		total = int(count / limit);
+		if count % limit != 0 and total > 0:
+			total += 1
+		return total
+
+
 
 def row2dict(row):
 	if row is None:
