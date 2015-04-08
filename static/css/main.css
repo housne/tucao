@@ -89,8 +89,9 @@ body {
 	}
 	.news-list li{
 		float:none;
-		height:50px;
+		height:70px;
 		width:100%;
+		box-sizing:border-box;
 		padding:10px;
 		border-top:solid 1px #eee;
 		font-size:16px;
