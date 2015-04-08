@@ -20,7 +20,7 @@ class Fetch(Thread):
     def __get_news_from_api(self):
         news = News()
         news_ids_from_database = [news['news_id'] for news in news.list()]
-        news_from_api = fetch_data(sectionUrl)['news']
+        news_from_api = self.fetch_data(sectionUrl)['news']
         news_ids_from_api = [news['news_id'] for news in news_from_api]
         if news_ids_from_api[0] != news_ids_from_database[0]:
             matched = (idx for idx, val in enumerate(news_ids_from_api) if val == news_ids_from_database[0])
@@ -33,7 +33,7 @@ class Fetch(Thread):
            return None
 
     def __fetch_news(self, news_data):
-        data = fetch_data(newsUrl + str(news_data['news_id']))
+        data = self.fetch_data(newsUrl + str(news_data['news_id']))
         if data is None or news_data['news_id'] != data['id']:
             return None
         data['body'] = parse_news_body(data['body'])
@@ -47,9 +47,22 @@ class Fetch(Thread):
         news.save(data)
         return news_data['news_id']
 
+    def fetch_data(self, url, type=None):
+        request = urllib2.Request(url)
+        request.add_header('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36')
+        request.add_header('Referer', 'http://www.zhihu.com')
+        try:
+            response = urllib2.urlopen(request, timeout=30)
+        except urllib2.HTTPError, e:
+            return None
+        if type == 'raw':
+            return response.read()
+        data = json.load(response)
+        return data
+
     def init_fetch(self):
         print('fetching from api for the first time...')
-        news_from_api = fetch_data(sectionUrl)['news']
+        news_from_api = self.fetch_data(sectionUrl)['news']
         print('index data fetch finished')
         for news in news_from_api:
             id = self.__fetch_news(news)
