@@ -5,7 +5,6 @@ import os
 from news import News
 from conf import *
 from fetch import Fetch
-from cache import Cache
 import time
 import datetime
 
