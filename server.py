@@ -65,4 +65,4 @@ def catch_all(path):
 if __name__ == '__main__':
     fetch = Fetch()
     fetch.start()
-    app.run(debug="True")
+    app.run()

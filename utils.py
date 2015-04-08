@@ -26,7 +26,7 @@ def upload_to_qiniu(url):
 
 def fetch_data(url, type=None):
     request = urllib2.Request(url)
-    request.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.131 Safari/537.36')
+    request.add_header('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36')
     request.add_header('Referer', 'http://www.zhihu.com')
     try:
         response = urllib2.urlopen(request, timeout=30)
