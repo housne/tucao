@@ -1,0 +1,8 @@
+<div class="wrap news">
+	<div class="container">
+		<div class="news-thumb" ng-style="{'background-image': 'url('+ news.image +')'}">
+			<div class="image-copyright">图片 {{news.image_source}}</div>
+		</div>
+		<div class="news-content" ng-bind-html="news.body"></div>
+	</div>
+</div>

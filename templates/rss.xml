@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+	<title>瞎扯 · 如何正确的吐槽</title>
+	<link href="{{site_url}}/" rel="alternate"></link>
+	<link href="{{site_url}}/rss" rel="self"></link>
+	<id>{{site_url}}/</id>
+	<updated>{{ data[0]['date'] }}</updated>
+	{% for news in data %}
+	<entry>
+		<title>{{ news['title'] }}</title>
+		<link href="{{site_url}}/news/{{ news['id'] }}" type="text/html" rel="alternate" />
+		<updated>{{ news['date'] }}</updated>
+		<content type="html">
+			<![CDATA[				
+			{{ news['body'] | safe }}
+			]]>
+		</content>
+	</entry>
+	{% endfor %}
+</feed>
