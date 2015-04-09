@@ -8,7 +8,7 @@
 	{% for news in data %}
 	<entry>
 		<title>{{ news['title'] }}</title>
-		<link href="{{site_url}}/news/{{ news['id'] }}" type="text/html" rel="alternate" />
+		<link href="{{site_url}}/news/{{ news['news_id'] }}" type="text/html" rel="alternate" />
 		<updated>{{ news['date'] }}</updated>
 		<content type="html">
 			<![CDATA[				
