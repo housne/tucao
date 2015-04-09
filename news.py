@@ -44,13 +44,13 @@ class News(Base):
 		page = page - 1
 		self.limit = limit
 		if page != 0:
-			offset = limit * page
-		newses = session.query(News.news_id, News.title, News.date, News.thumbnail).order_by(News.id.desc()).offset(offset).limit(limit)
+			offset = self.limit * page
+		newses = session.query(News.news_id, News.title, News.date, News.thumbnail).order_by(News.id.desc()).offset(offset).limit(self.limit)
 		fields = ('news_id', 'title', 'date', 'thumbnail')
 		return [dict(zip(fields, d)) for d in newses]
 
 	def sort(self):
-		newses = session.query(News).limit(10)
+		newses = session.query(News).order_by(News.id.desc()).limit(10)
 		return [row2dict(news) for news in newses]
 
 	def count(self):
