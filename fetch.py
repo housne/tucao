@@ -23,11 +23,13 @@ class Fetch(Thread):
         news_from_api = self.fetch_data(sectionUrl)['news']
         news_ids_from_api = [news['news_id'] for news in news_from_api]
         if news_ids_from_api[0] != news_ids_from_database[0]:
-            matched = (idx for idx, val in enumerate(news_ids_from_api) if val == news_ids_from_database[0])
+            fetch_log("detected new data from api")
+            matched = [idx for idx, val in enumerate(news_ids_from_api) if val == news_ids_from_database[0]]
             if len(matched) == 0:
                 end = len(news_ids_from_api)
             else:
                 end = matched[0]
+            fetch_log("end index is %s" %end)
             return [self.__fetch_news(news) for news in news_from_api[:end]]
         else:
            return None

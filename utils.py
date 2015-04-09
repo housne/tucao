@@ -6,6 +6,7 @@ from conf import *
 import qiniu
 from bs4 import BeautifulSoup
 import fetch
+import os
 
 def parse_news_body(body):
     soup = BeautifulSoup(body)
@@ -36,3 +37,8 @@ def fetch_data(url, type=None):
         return response.read()
     data = json.load(response)
     return data
+
+def fetch_log(log):
+    with open(os.path.dirname(__file__) + 'fetch.log', 'a+') as log_file:
+        log_file.write("%s \n" %log)
+

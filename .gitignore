@@ -57,4 +57,5 @@ docs/_build/
 conf.py
 *.db
 bower_components
+*.db-journal
 
