@@ -39,6 +39,6 @@ def fetch_data(url, type=None):
     return data
 
 def fetch_log(log):
-    with open(os.path.dirname(__file__) + 'fetch.log', 'a+') as log_file:
+    with open(os.path.dirname(__file__) + '/fetch.log', 'a+') as log_file:
         log_file.write("%s \n" %log)
 
