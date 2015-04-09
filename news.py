@@ -42,9 +42,10 @@ class News(Base):
 
 	def list(self, offset=0, limit=20, page=1):
 		page = page - 1
+		self.limit = limit
 		if page != 0:
 			offset = limit * page
-		newses = session.query(News.news_id, News.title, News.date, News.thumbnail).offset(offset).limit(limit)
+		newses = session.query(News.news_id, News.title, News.date, News.thumbnail).order_by(News.id.desc()).offset(offset).limit(limit)
 		fields = ('news_id', 'title', 'date', 'thumbnail')
 		return [dict(zip(fields, d)) for d in newses]
 
@@ -52,10 +53,10 @@ class News(Base):
 		newses = session.query(News).limit(10)
 		return [row2dict(news) for news in newses]
 
-	def count(self, limit=20):
+	def count(self):
 		count = session.query(News).count()
-		total = int(count / limit);
-		if count % limit != 0 and total > 0:
+		total = int(count / self.limit);
+		if count % self.limit != 0 and total > 0:
 			total += 1
 		return total
 

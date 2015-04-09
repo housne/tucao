@@ -35,7 +35,7 @@ def index():
     page = request.args.get('page')
     if page is None:
         page = 1
-    data = news.list(page=int(page))
+    data = news.list(page=int(page), limit=10)
     total = news.count()
     if data is None:
         return jsonResponse(type='404')
