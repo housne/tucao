@@ -7,6 +7,7 @@ import qiniu
 from bs4 import BeautifulSoup
 import fetch
 import os
+from time import gmtime, strftime
 
 def parse_news_body(body):
     soup = BeautifulSoup(body)
@@ -39,6 +40,7 @@ def fetch_data(url, type=None):
     return data
 
 def fetch_log(log):
+    nowTime = strftime("%Y-%m-%d %H:%M:%S", gmtime())
     with open(os.path.dirname(__file__) + '/fetch.log', 'a+') as log_file:
-        log_file.write("%s \n" %log)
+        log_file.write("%s: %s \n" %(nowTime, log))
 
