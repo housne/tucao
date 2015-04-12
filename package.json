@@ -1,0 +1,10 @@
+{
+  "name": "tucao",
+  "version": "0.1.0",
+  "devDependencies": {
+    "grunt": "",
+    "grunt-contrib-uglify": "",
+    "grunt-contrib-cssmin": "",
+    "grunt-contrib-watch": ""
+  }
+}

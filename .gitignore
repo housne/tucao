@@ -58,4 +58,5 @@ conf.py
 *.db
 bower_components
 *.db-journal
+node_modules/
 

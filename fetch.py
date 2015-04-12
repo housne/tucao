@@ -72,7 +72,7 @@ class Fetch(Thread):
     def run(self):
         while True:
             self.__get_news_from_api()
-            time.sleep(60)
+            time.sleep(60*60*2)
 
     
 

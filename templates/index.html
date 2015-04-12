@@ -4,16 +4,30 @@
 	<title>瞎扯·如何正确的吐槽 - 来自知乎日报</title>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8">
  	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-	<link rel="stylesheet" type="text/css" href="/assets/css/main.css">
-	<script src="/assets/bower_components/angular/angular.min.js"></script>
-	<script src="/assets/bower_components/angular-route/angular-route.min.js"></script>
-	<script src="/assets/js/app.js"></script>
-	<script src="/assets/js/controller.js"></script>
+	<link rel="stylesheet" type="text/css" href="/assets/css/main.min.css">
 	<base href="/">
 	<link rel="alternate" type="application/atom+xml" href="/rss">
 </head>
 <body ng-app="app">
-	<ng-view></ng-view>
+	<div id="indexView">
+		<div class="container">
+			<h3 class="logo">瞎扯·如何正确的吐槽 - 来自知乎日报</h3>
+			<ul class="news-list clearfix" id="newsList">
+			</ul>
+			<div class="text-center hide" id="pagination">
+				<button class="button more-button" id="loadMore">MORE</button>
+			</div>
+		</div>
+	</div>
+
+	<div id="newsView" class="hide">
+		<div class="wrap news">
+			<div class="container" id="newsDetail">	
+			</div>
+		</div>
+	</div>
+
+	<script src="/assets/js/app.min.js"></script>
 
 	<script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
