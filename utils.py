@@ -17,14 +17,27 @@ def parse_news_body(body):
 
 
 def upload_to_qiniu(url):
-    data = fetch_data(url, type="raw")
-    q = qiniu.Auth(qiniu_access_key, qiniu_secrect_key)
-    token = q.upload_token(qiniu_bucket_name)
-    ret, info = qiniu.put_data(token, None, data)
-    if ret is not None:
-        return qiniu_bucket_host + "/" + ret['hash']
-    else:
-        return "%s/404-icon.png" %(qiniu_bucket_host)
+    try_time = 10
+    qiniu_file_url = None
+    while(qiniu_file_url is None and try_time > 0):
+        qiniu_file_url = upload_to_qiniu_action(url)
+        try_time -= 1
+    return qiniu_file_url
+    
+
+def upload_to_qiniu_action(url):
+    try:
+        data = fetch_data(url, type="raw")
+        q = qiniu.Auth(qiniu_access_key, qiniu_secrect_key)
+        token = q.upload_token(qiniu_bucket_name)
+        ret, info = qiniu.put_data(token, None, data)
+        if ret is not None:
+            return qiniu_bucket_host + "/" + ret['hash']
+        else:
+            return None
+    except Exception, err:
+        fetch_log('Error: %s' % str(err))
+        return None
 
 def fetch_data(url, type=None):
     request = urllib2.Request(url)

@@ -40,18 +40,23 @@ class Fetch(Thread):
     def __fetch_news(self, news_data):
         fetch_log('fetch news id %d' %(news_data['news_id']))
         data = fetch_data(newsUrl + str(news_data['news_id']))
+        fetch_log('fetched news id %d' %(news_data['news_id']))
         if data is None or news_data['news_id'] != data['id']:
             return None
         data['body'] = parse_news_body(data['body'])
+        fetch_log('parsed news body')
         try:
             data['image'] = upload_to_qiniu(data['image'])
         except KeyError:
             data['image'] = 'default-lg.jpg'
+        fetch_log('image uploaded')
         data['thumbnail'] = upload_to_qiniu(news_data['thumbnail'])
+        fetch_log('thumbnail uploaded')
         data['date'] = datetime.strptime(news_data['date'], '%Y%m%d')
         news = News(news_id=int(data['id']))
         news.save(data)
-        return news_data['news_id']
+        fetch_log('news %s saved' % int(data['id']))
+        return data['id']
 
 
     def init_fetch(self):
