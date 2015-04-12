@@ -31,10 +31,11 @@ class Fetch(Thread):
             else:
                 end = matched[0]
             fetch_log("end index is %s" %end)
-            return [self.__fetch_news(news) for news in news_from_api[:end][::-1]]
+            for news in news_from_api[:end][::-1]:
+                self.__fetch_news(news)
         else:
             fetch_log('Nothing new')
-            return None
+        return None
 
     def __fetch_news(self, news_data):
         fetch_log('fetch news id %d' %(news_data['news_id']))
@@ -66,7 +67,7 @@ class Fetch(Thread):
     def run(self):
         while True:
             self.__get_news_from_api()
-            time.sleep(60*60*2)
+            time.sleep(60)
 
     
 
