@@ -19,11 +19,11 @@ module.exports = function(grunt) {
     },
     watch: {
       scripts: {
-        files: ['static/css/*.js'],
+        files: ['static/css/app.js'],
         tasks: ['uglify:build']
       },
       styles: {
-        files: ['static/css/*.css'],
+        files: ['static/css/main.css'],
         tasks: ['cssmin:min']
       }
     }

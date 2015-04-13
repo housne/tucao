@@ -19,7 +19,7 @@ def parse_news_body(body):
 def upload_to_qiniu(url):
     try_time = 10
     qiniu_file_url = None
-    while(qiniu_file_url is None and try_time > 0):
+    while qiniu_file_url is None and try_time > 0:
         qiniu_file_url = upload_to_qiniu_action(url)
         try_time -= 1
     return qiniu_file_url
@@ -40,17 +40,31 @@ def upload_to_qiniu_action(url):
         return None
 
 def fetch_data(url, type=None):
-    request = urllib2.Request(url)
-    request.add_header('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36')
-    request.add_header('Referer', 'http://www.zhihu.com')
+    try_time = 10
+    result = None
+    while result is None && try_time > 0:
+        result = fetch_date_action(url, type)
+        try_time -= 1
+    return result
+
+def fetch_date_action(url, type=None):
     try:
-        response = urllib2.urlopen(request, timeout=30)
-    except urllib2.HTTPError, e:
-        return None
-    if type == 'raw':
-        return response.read()
-    data = json.load(response)
-    return data
+        request = urllib2.Request(url)
+        request.add_header('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36')
+        request.add_header('Referer', 'http://www.zhihu.com')
+        try:
+            response = urllib2.urlopen(request, timeout=30)
+        except urllib2.HTTPError, e:
+            fetch_log('Error: %s' % str(e))
+            return None
+        if type == 'raw':
+            return response.read()
+        data = json.load(response)
+        return data
+    except Exception, err:
+        fetch_log('Error: %s' % str(err))
+        return None 
+
 
 def fetch_log(log):
     nowTime = strftime("%Y-%m-%d %H:%M:%S", gmtime())
