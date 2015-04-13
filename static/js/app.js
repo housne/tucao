@@ -102,7 +102,6 @@
         var render = function(response){
             var result = response.result;
             result = convertTimestampToLoaleDateString(result);
-            console.log(result);
             var html = '';
             result.forEach(function(news){
                 html += '<li>';
@@ -170,7 +169,7 @@
 
         if(Object.prototype.toString.call(result) === '[object Array]'){
             result.forEach(function(item, index){
-                result[index].date = dateFormat(item.date); 
+                result[index].date = dateFormat(item.date);
             });
         }else if(typeof result === 'string' || typeof result === 'number'){
             var result = dateFormat(result);
