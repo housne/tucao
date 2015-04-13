@@ -42,7 +42,7 @@ def upload_to_qiniu_action(url):
 def fetch_data(url, type=None):
     try_time = 10
     result = None
-    while result is None && try_time > 0:
+    while result is None and try_time > 0:
         result = fetch_date_action(url, type)
         try_time -= 1
     return result
