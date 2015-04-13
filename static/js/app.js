@@ -1,5 +1,5 @@
 
-(function(exports){
+(function(window){
 
     var $http =  {
         'get': function(url, args){
@@ -89,7 +89,8 @@
             initializeNews(id);
         }else if(/\//.test(path)){
             initializeIndex();
-        }; 
+        };
+        if(window.ga) window.ga('send', 'pageview', window.location.pathname);
     }
 
     function initializeRefresh(){
