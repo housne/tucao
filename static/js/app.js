@@ -141,6 +141,7 @@
         $http.get('/api/news/'+ id).then(function(response){
             render(response);
             $selector('#indexView').className = 'hide';
+            window.scrollTo(0, 0);
             $selector('#newsView').removeClass('hide');
          });
 
