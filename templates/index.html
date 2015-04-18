@@ -22,7 +22,26 @@
 
 	<div id="newsView" class="hide">
 		<div class="wrap news">
-			<div class="container" id="newsDetail">	
+			<div class="container">
+				<div id="newsDetail"></div>
+				<div class="tool-bar">
+					<div class="nav-bar">
+						<a href="/" class="btn home"></a>
+						<button class="btn share" id="shareBtn"></button>
+					</div>
+					<div class="popup-component hide" id="shareComponent">
+						<div class="tool-bar-mask" id="shareMask"></div>
+						<div class="share-component" id="shareContainer">
+							<div class="share-bar" id="shareBar">
+								<button class="share-btn twitter" data-type="twitter">Twitter</button>
+								<button class="share-btn facebook" data-type="facebook">Facebook</button>
+								<button class="share-btn google" data-type="google">Google</button>
+								<button class="share-btn weibo" data-type="weibo">Weibo</button>
+							</div>
+							<button class="cancel" id="hideShare">Cancel</button>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

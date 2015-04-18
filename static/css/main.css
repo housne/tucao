@@ -249,6 +249,9 @@ body {
     border-bottom:solid 1px #f5f5f5;
     overflow:hidden;
 }
+.news .news-content .question:last-child{
+    border:none;
+}
 .news .question .question-title{
     font-size:22px;
 }
@@ -273,3 +276,129 @@ body {
     max-width:100%;
     margin:10px 0;
 }
+.tool-bar .nav-bar{
+    width:110px;
+    text-align: center;
+    margin:0 auto;
+    padding:20px 0 40px;
+    height:32px;
+    border-top: solid 1px #999;
+    margin-top: 20px;
+}
+.tool-bar-mask{
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    top:0;
+    left: 0;
+    background:rgba(0, 0, 0, .3);
+}
+.tool-bar .btn{
+    display: inline-block;
+    height: 25px;
+    width: 25px;
+    border:none;
+    background-color:transparent;
+    vertical-align: middle;
+    outline: 0;
+    cursor: pointer;
+}
+
+.tool-bar .nav-bar .home{
+    background:url(../images/home.png) no-repeat;
+    background-size: 25px 25px;
+    margin:0 10px;
+}
+
+.tool-bar .nav-bar .share{
+    background:url(../images/share.png) no-repeat;
+    background-size: 25px 25px;
+    margin:0 10px;
+}
+.share-component{
+    position: fixed;
+    width:100%;
+    left:0;
+    bottom:0;
+    box-sizing:border-box;
+    padding:10px;
+    transform: translateY(150px);
+    transition: transform .2s;
+}
+.share-component.show{
+   transform: translateY(0); 
+}
+.share-component .share-bar{
+    background:rgba(255, 255, 255, .9);
+    border-radius: 3px;
+    padding:15px 10px 10px;
+    text-align: center;
+}
+.share-component .share-btn{
+    display: inline-block;
+    width: 50px;
+    box-sizing:border-box;
+    text-align: center;
+    font-size: 12px;
+    margin-right:10px;
+    padding-top: 25px;
+    text-decoration: none;
+    color: #000;
+    background-position: 50% 0;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    outline: 0;
+    border:none;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.share-component .twitter{
+    background-image:url(../images/twitter.png);
+    background-size: 25px 25px;
+}
+.share-component .facebook{
+    background-image:url(../images/facebook.png);
+    background-size: 25px 25px;
+}
+
+.share-component .tumblr{
+    background-image:url(../images/tumblr.png);
+    background-size: 25px 25px;
+}
+.share-component .google{
+    background-image:url(../images/google.png);
+    background-size: 25px 25px;
+}
+.share-component .weibo{
+    background-image:url(../images/weibo.png);
+    background-size: 30px 25px;
+}
+
+.share-component .cancel{
+    border: none;
+    background:rgba(255, 255, 255, .9);
+    display: block;
+    text-align: center;
+    padding:10px 0;
+    width: 100%;
+    box-sizing:border-box;
+    border-radius: 3px;
+    margin-top: 10px;
+    font-size: 16px;
+    outline: 0;
+    cursor: pointer;
+}
+
+@media (min-width: 600px){
+    .tool-bar-mask, .share-component{
+        width: 600px;
+        left:50%;
+        margin-left:-300px;
+    }
+}
+
+
+
+
+

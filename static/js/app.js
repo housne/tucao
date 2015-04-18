@@ -1,6 +1,8 @@
 
 (function(window){
 
+    var articleImg = '';
+
     var $http =  {
         'get': function(url, args){
             return request('GET', url, args);
@@ -80,6 +82,7 @@
             routeHandler();
         });
         initializeRefresh();
+        shareComponent();
     };
 
     function routeHandler(){
@@ -141,6 +144,7 @@
         $selector('#indexView').addClass('loading');
         $http.get('/api/news/'+ id).then(function(response){
             render(response);
+            articleImg = response.result.image;
             $selector('#indexView').className = 'hide';
             window.scrollTo(0, 0);
             $selector('#newsView').removeClass('hide');
@@ -155,6 +159,49 @@
             html += '<div class="news-content">'+ news.body +'</div>';
             $selector('#newsDetail').innerHTML = html;
         };
+    }
+
+    function shareComponent(){
+        var hideShareComponent = function(){
+            $selector('#shareContainer').removeClass('show');
+            setTimeout(function(){$selector('#shareComponent').addClass('hide');}, 300);
+        };
+        $selector('#shareBtn').addEventListener('click', function(event){
+            event.preventDefault();
+            $selector('#shareComponent').removeClass('hide');
+            setTimeout(function(){$selector('#shareContainer').addClass('show');}, 100);
+        });
+        $selector('#hideShare').addEventListener('click', hideShareComponent);
+        $selector('#shareMask').addEventListener('click', hideShareComponent);
+
+        var share = function(type){
+            var url = '', title = document.title, uri = encodeURIComponent(location.href);
+            switch(type){
+                case 'twitter':
+                    url = 'http://twitter.com/share?text='+ title +'&url=' + uri;
+                    break;
+                case 'facebook':
+                    url = 'http://www.facebook.com/sharer.php?u=' + uri;
+                    break;
+                case 'google':
+                    url = 'https://plus.google.com/share?url=' + uri;
+                    break;
+                case 'weibo':
+                    url = 'http://service.weibo.com/share/share.php?url='+ uri +'&title='+ title +'&pic='+ articleImg;
+                    break;
+            };
+            if(!url) return;
+            window.open(url);
+        };
+
+        $selector('#shareBar').addEventListener('click', function(event){
+            var target = event.target;
+            if(target.tagName.toLowerCase() !== 'a') return;
+            event.preventDefault();
+            var type = target.dataset && target.dataset.type || '';
+            share(type);
+            hideShareComponent();
+        })
     }
 
     function convertTimestampToLoaleDateString(result){
