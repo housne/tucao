@@ -37,6 +37,7 @@
         this.addEventListener(event, function(event){
             var eTarget = event.target;
             while(eTarget.tagName.toLowerCase() !== target && eTarget.parentNode){
+                if(eTarget.tagName.toLowerCase() === 'body') break;
                 eTarget = eTarget.parentNode;
             };
             if(eTarget.tagName.toLowerCase() !== target) return;
@@ -73,17 +74,22 @@
     };
 
     function initialize(){
+        pushStateRouterHandler();
         routeHandler();
         window.addEventListener('popstate', routeHandler)
-        $selector('#newsList').delegate('click', 'a', function(event, target){
-            event.preventDefault();
-            var url = target.getAttribute('href');
-            history.pushState({}, document.title, url);
-            routeHandler();
-        });
         initializeRefresh();
         shareComponent();
     };
+
+    function pushStateRouterHandler(){
+        document.getElementsByTagName('body')[0].delegate('click', 'a', function(event, target){
+            var href = target.getAttribute('href') || '';
+            if(!/^\/.*$/.test(href)) return;
+            event.preventDefault();
+            history.pushState({}, document.title, href);
+            routeHandler();
+        });
+    }
 
     function routeHandler(){
         var path = window.location.pathname;
