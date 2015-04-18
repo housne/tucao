@@ -323,10 +323,13 @@ body {
     box-sizing:border-box;
     padding:10px;
     transform: translateY(150px);
+    -webkit-transform: translateY(150px);
     transition: transform .2s;
+    -webkit-transition: transform .2s;
 }
 .share-component.show{
-   transform: translateY(0); 
+   transform: translateY(0);
+   -webkit-transform: translateY(0);
 }
 .share-component .share-bar{
     background:rgba(255, 255, 255, .9);
