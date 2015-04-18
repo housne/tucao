@@ -59,4 +59,5 @@ conf.py
 bower_components
 *.db-journal
 node_modules/
+.DS_Store
 

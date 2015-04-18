@@ -196,7 +196,7 @@
 
         $selector('#shareBar').addEventListener('click', function(event){
             var target = event.target;
-            if(target.tagName.toLowerCase() !== 'a') return;
+            if(target.tagName.toLowerCase() !== 'button') return;
             event.preventDefault();
             var type = target.dataset && target.dataset.type || '';
             share(type);
