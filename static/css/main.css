@@ -325,7 +325,7 @@ body {
     transform: translateY(150px);
     -webkit-transform: translateY(150px);
     transition: transform .2s;
-    -webkit-transition: transform .2s;
+    -webkit-transition: -webkit-transform .2s;
 }
 .share-component.show{
    transform: translateY(0);
@@ -334,16 +334,15 @@ body {
 .share-component .share-bar{
     background:rgba(255, 255, 255, .9);
     border-radius: 3px;
-    padding:15px 10px 10px;
+    padding:15px 0 10px;
     text-align: center;
 }
 .share-component .share-btn{
     display: inline-block;
-    width: 50px;
+    width: 70px;
     box-sizing:border-box;
     text-align: center;
     font-size: 12px;
-    margin-right:10px;
     padding-top: 25px;
     text-decoration: none;
     color: #000;
