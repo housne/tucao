@@ -64,6 +64,14 @@
         return this;
     }
 
+    Element.prototype.addEventListeners = function(events, fn){
+        var events = events.split(' ');
+        var self = this;
+        events.forEach(function(event){
+            self.addEventListener(event, fn);
+        })
+    }
+
 
     function request(method, url, args){
         return new Promise(function(resolve, reject){
@@ -195,13 +203,13 @@
             $selector('#shareContainer').removeClass('show');
             setTimeout(function(){$selector('#shareComponent').addClass('hide');}, 300);
         };
-        $selector('#shareBtn').addEventListener('click', function(event){
+        $selector('#shareBtn').addEventListeners('click touchstart', function(event){
             event.preventDefault();
             $selector('#shareComponent').removeClass('hide');
             setTimeout(function(){$selector('#shareContainer').addClass('show');}, 100);
         });
-        $selector('#hideShare').addEventListener('click', hideShareComponent);
-        $selector('#shareMask').addEventListener('click', hideShareComponent);
+        $selector('#hideShare').addEventListeners('click touchstart', hideShareComponent);
+        $selector('#shareMask').addEventListeners('click touchstart', hideShareComponent);
 
         var share = function(type){
             var url = '', title = document.title, uri = encodeURIComponent(location.href);
