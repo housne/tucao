@@ -162,11 +162,13 @@
     }
 
     function initializeNews(id){
+        $selector('#newsDetail').addClass('white-mask');
         window.scrollTo(0, 0);
         $selector('#indexView').removeClass('loading').setTransLate(-getPageHeight());
         $selector('#newsView').removeClass('hidden').removeAttribute('style');
         $http.get('/api/news/'+ id).then(function(response){
             render(response);
+            $selector('#newsDetail').removeClass('white-mask');
             articleImg = response.result.image;
          });
 
