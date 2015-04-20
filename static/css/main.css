@@ -234,6 +234,11 @@ body {
     -webkit-transition: -webkit-transform .5s;
     height:auto;
     overflow: auto;
+    position: absolute;
+    height:100%;
+    width:100%;
+    top:0;
+    left:0;
 }
 
 .news .wrap{
