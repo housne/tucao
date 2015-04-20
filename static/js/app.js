@@ -42,7 +42,19 @@
             };
             if(eTarget.tagName.toLowerCase() !== target) return;
             callback(event, eTarget);
-        })
+        });
+        return this;
+    }
+
+    Element.prototype.setTransLate = function(transform){
+        var direct = 'Y';
+        var clientWidth = window.innerWidth;
+        if(clientWidth <= 600){
+            var transform = transform < 0 ? -clientWidth : clientWidth;
+            direct = 'X'
+        }
+        this.setAttribute('style', 'transform:translate' + direct + '('+ transform +'px); -webkit-transform: translate' + direct + '('+ transform +'px);');
+        return this;
     }
 
 
@@ -132,8 +144,11 @@
     }
 
     function initializeIndex(){
-        $selector('#newsView').addClass('hide');
-        $selector('#indexView').removeClass('hide');
+        if(!isMinWidth()) window.scrollTo(0, 0);
+        $selector('#newsView').setTransLate(getPageHeight());
+        window.scrollTo(0, 0);
+        setTimeout(function(){$selector('#newsView').addClass('hidden');}, 500);
+        $selector('#indexView').removeAttribute('style');
     }
 
     function pagination(render){
@@ -147,13 +162,12 @@
     }
 
     function initializeNews(id){
-        $selector('#indexView').addClass('loading');
+        window.scrollTo(0, 0);
+        $selector('#indexView').removeClass('loading').setTransLate(-getPageHeight());
+        $selector('#newsView').removeClass('hidden').removeAttribute('style');
         $http.get('/api/news/'+ id).then(function(response){
             render(response);
             articleImg = response.result.image;
-            $selector('#indexView').className = 'hide';
-            window.scrollTo(0, 0);
-            $selector('#newsView').removeClass('hide');
          });
 
         var render = function(response){
@@ -231,6 +245,16 @@
         };
 
         return result;
+    }
+
+    function getPageHeight(){
+        var indexHeight = $selector('#indexView').offsetHeight;
+        var windowHeight = window.innerHeight;
+        return indexHeight > windowHeight ? indexHeight : windowHeight;
+    }
+
+    function isMinWidth(){
+        return window.innerWidth <= 600;
     }
 
     initialize();
