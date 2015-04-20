@@ -169,6 +169,8 @@
         $http.get('/api/news/'+ id).then(function(response){
             render(response);
             $selector('#newsDetail').removeClass('white-mask');
+            var newsHeight = $selector('#newsDetail').offsetHeight;
+            $selector('#newsView').setAttribute('height', newsHeight + 'px');
             articleImg = response.result.image;
          });
 
