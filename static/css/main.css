@@ -115,7 +115,10 @@ body {
     width: 100%;
     top:0;
     left:0;
+    transform: translateY(0) translateX(0);
+    -webkit-transform: translateY(0) translateX(0);
     transition: transform .5s;
+    -webkit-transition: -webkit-transform .5s;
 }
 .news-list li{
     float:left;
@@ -212,8 +215,10 @@ body {
 }
 
 .news{
-    transform: translateY(0);
+    transform: translateY(0) translateX(0);
+    -webkit-transform: translateY(0) translateX(0);
     transition: transform .5s;
+    -webkit-transition: -webkit-transform .5s;
     height:auto;
     overflow: auto;
 }
