@@ -18,6 +18,7 @@
     }
 
     Element.prototype.addClass = function(klass){
+        if(this.className.indexOf(klass) !== -1) return this;
         if(!this.className){
             this.className = klass;
         }else{
@@ -28,8 +29,14 @@
 
     Element.prototype.removeClass = function(klass){
         if(!this.className || this.className.indexOf(klass) === -1) return this;
+        if(this.className.indexOf(' ') === -1 && this.className === klass){
+            this.removeAttribute('class');
+            return this;
+        };
+        var klasses = this.className.split(' ');
+        var replacer = (klass !== klasses[0] && klass !== klasses[klasses.length - 1]) ? ' ' : '';
         var reg = new RegExp('\\s*'+ klass +'\\s*', 'g');
-        this.className = this.className.replace(reg, '');
+        this.className = this.className.replace(reg, replacer);
         return this;
     };
 
@@ -147,7 +154,7 @@
         if(!isMinWidth()) window.scrollTo(0, 0);
         $selector('#newsView').setTransLate(getPageHeight());
         window.scrollTo(0, 0);
-        setTimeout(function(){$selector('#newsView').addClass('hidden');}, 500);
+        setTimeout(function(){$selector('#newsView').addClass('hidden unvisible');}, 500);
         $selector('#indexView').removeAttribute('style');
     }
 
@@ -162,15 +169,13 @@
     }
 
     function initializeNews(id){
-        $selector('#newsDetail').addClass('white-mask');
-        window.scrollTo(0, 0);
-        $selector('#indexView').removeClass('loading').setTransLate(-getPageHeight());
-        $selector('#newsView').removeClass('hidden').removeAttribute('style');
+        $selector('#indexView').removeClass('loading');
         $http.get('/api/news/'+ id).then(function(response){
             render(response);
-            $selector('#newsDetail').removeClass('white-mask');
-            var newsHeight = $selector('#newsDetail').offsetHeight;
-            $selector('#newsView').setAttribute('height', newsHeight + 'px');
+            window.scrollTo(0, 0);
+            $selector('#indexView').removeClass('loading').setTransLate(-getPageHeight());
+            $selector('#newsView').removeClass('hidden').removeAttribute('style');
+            setTimeout(function(){$selector('#newsView').removeClass('unvisible');}, 500);
             articleImg = response.result.image;
          });
 
