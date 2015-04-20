@@ -183,7 +183,7 @@
             window.scrollTo(0, 0);
             $selector('#indexView').removeClass('loading').setTransLate(-getPageHeight());
             $selector('#newsView').removeClass('hidden').removeAttribute('style');
-            setTimeout(function(){$selector('#newsView').removeClass('unvisible');}, 500);
+            setTimeout(function(){$selector('#newsView').removeClass('unvisible');}, 600);
             articleImg = response.result.image;
          });
 
