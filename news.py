@@ -19,21 +19,21 @@ class News(Base):
 	thumbnail = Column(String)
 	date = Column(DateTime)
 
-	def __init__(self, news_id=None, body=None, title=None, image_source=None, image=None, thumbnail=None, date=None):
-		self.news_id = news_id
-		self.body = body
-		self.title = title
-		self.image_source = image_source
-		self.image = image 
-		self.thumbnail = thumbnail
-		self.date = date
+	def __init__(self, **news):
+		self.news_id = news.get("news_id", None)
+		self.body = news.get("body", None)
+		self.title = news.get("title", None)
+		self.image_source = news.get("image_source", None)
+		self.image = news.get("image", None) 
+		self.thumbnail = news.get("thumbnail", None)
+		self.date = news.get("date", None)
 
 	def get(self):
 		news = session.query(News).filter(News.news_id == self.news_id).first()
 		return row2dict(news)
 
 	def save(self, news):
-		news = News(news_id=news['id'], body=news['body'], title=news['title'], image_source=news['image_source'], image=news['image'], thumbnail=news['thumbnail'], date=news['date'])
+		news = News(news_id=news['id'], **news)
 		session.add(news)
 		try:
 			session.commit()
