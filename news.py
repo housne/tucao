@@ -20,7 +20,7 @@ class News(Base):
 	date = Column(DateTime)
 
 	def __init__(self, **news):
-		self.news_id = news.get("news_id", None)
+		self.news_id = news.get("id", None)
 		self.body = news.get("body", None)
 		self.title = news.get("title", None)
 		self.image_source = news.get("image_source", None)
@@ -33,7 +33,7 @@ class News(Base):
 		return row2dict(news)
 
 	def save(self, news):
-		news = News(news_id=news['id'], **news)
+		news = News(**news)
 		session.add(news)
 		try:
 			session.commit()
